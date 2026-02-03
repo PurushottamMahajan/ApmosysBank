@@ -1,0 +1,22 @@
+<div class="card">
+  <h2>Create Customer</h2>
+
+  <div class="form-grid">
+    <input placeholder="First Name" [(ngModel)]="customer.firstName">
+    <input placeholder="Last Name" [(ngModel)]="customer.lastName">
+    <input type="date" [(ngModel)]="customer.dob">
+
+    <select [(ngModel)]="customer.gender">
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+
+    <input placeholder="Email" [(ngModel)]="customer.email">
+    <input placeholder="Mobile Number" [(ngModel)]="customer.mobileNumber">
+    <input placeholder="Aadhar Number" [(ngModel)]="customer.aadharNumber">
+  </div>
+
+  <button (click)="createCustomer()">Create Customer</button>
+</div>

@@ -1,15 +1,23 @@
-# Eclipse workspace files
-.metadata/
-.recommenders/
+# Backend (Spring Boot / Maven)
+target/
+bin/
+.mvn/wrapper/maven-wrapper.jar
+
+# Frontend (Angular / Node)
+node_modules/
+dist/
+.angular/
+
+# IDEs
+.idea/
+.vscode/
+.classpath
+.project
 .settings/
 
-# Build folders
-bin/
-target/
-
-# Logs
-*.log
-
-# OS files
+# OS
 .DS_Store
 Thumbs.db
+
+# Eclipse workspace
+.metadata/
