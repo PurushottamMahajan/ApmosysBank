@@ -1,20 +1,34 @@
 package com.bank_app.dto;
 
-import jakarta.validation.constraints.*;
-import lombok.Data;
-
 import java.math.BigDecimal;
 
-@Data
 public class TransactionRequestDTO {
 
-    @NotNull(message = "Account ID is required")
-    private Long accountId;
-
-    @NotBlank(message = "Transaction type is required")
+    private String accountNumber;
     private String transactionType; // DEBIT / CREDIT
-
-    @NotNull(message = "Amount is required")
-    @DecimalMin(value = "1.0", message = "Amount must be greater than zero")
     private BigDecimal amount;
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 }

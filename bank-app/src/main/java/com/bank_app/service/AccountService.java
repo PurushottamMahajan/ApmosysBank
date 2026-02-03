@@ -1,7 +1,6 @@
 package com.bank_app.service;
 
-import com.bank_app.dto.AccountRequestDTO;
-import com.bank_app.dto.AccountResponseDTO;
+import com.bank_app.dto.AccountCreationRequestDTO;
 import com.bank_app.entity.Account;
 import com.bank_app.entity.Customer;
 import com.bank_app.exception.ResourceNotFoundException;
@@ -9,45 +8,37 @@ import com.bank_app.repository.AccountRepository;
 import com.bank_app.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.math.BigDecimal;
 
 @Service
 public class AccountService {
 
-    private final AccountRepository accountRepository;
-    private final CustomerRepository customerRepository;
+    private final AccountRepository accountRepo;
+    private final CustomerRepository customerRepo;
 
-    public AccountService(AccountRepository accountRepository,
-                          CustomerRepository customerRepository) {
-        this.accountRepository = accountRepository;
-        this.customerRepository = customerRepository;
+    public AccountService(AccountRepository accountRepo, CustomerRepository customerRepo) {
+        this.accountRepo = accountRepo;
+        this.customerRepo = customerRepo;
     }
 
-    public AccountResponseDTO createAccount(AccountRequestDTO dto) {
+    public Account createAccount(AccountCreationRequestDTO dto) {
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
-        	    .orElseThrow(() ->
-        	        new ResourceNotFoundException("Customer not found"));
-
+        Customer customer = customerRepo
+                .findByCifNumber(dto.getCifNumber())
+                .orElseThrow(() -> new RuntimeException("Invalid CIF"));
 
         Account account = new Account();
-        account.setAccountNumber(generateAccountNumber());
+        account.setAccountNumber("AC" + System.currentTimeMillis());
         account.setAccountType(dto.getAccountType());
-        account.setBalance(dto.getInitialBalance());
+        account.setBalance(BigDecimal.ZERO);
         account.setCustomer(customer);
 
-        Account saved = accountRepository.save(account);
-
-        AccountResponseDTO response = new AccountResponseDTO();
-        response.setAccountId(saved.getAccountId());
-        response.setAccountNumber(saved.getAccountNumber());
-        response.setAccountType(saved.getAccountType());
-        response.setBalance(saved.getBalance());
-
-        return response;
+        return accountRepo.save(account);
     }
-
-    private String generateAccountNumber() {
-        return "AC" + (100000 + new Random().nextInt(900000));
-    }
+public BigDecimal getBalance(String accountNumber) {
+    Account account = accountRepo.findByAccountNumber(accountNumber)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Account not found"));
+    return account.getBalance();
+}
 }

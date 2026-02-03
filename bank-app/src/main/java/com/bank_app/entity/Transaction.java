@@ -29,4 +29,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+    @Column(unique = true, nullable = false)
+    private String transactionRef;
+
 }

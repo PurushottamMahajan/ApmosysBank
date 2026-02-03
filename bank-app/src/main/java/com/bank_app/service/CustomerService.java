@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private String generateCif() {
+    return "CIF" + System.currentTimeMillis();
+    }
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -34,6 +37,7 @@ public class CustomerService {
         customer.setAadharNumber(dto.getAadharNumber());
 
         Customer savedCustomer = customerRepository.save(customer);
+        customer.setCifNumber(generateCif());
 
         return mapToResponseDTO(savedCustomer);
     }
@@ -66,4 +70,11 @@ public class CustomerService {
         response.setMobileNumber(customer.getMobileNumber());
         return response;
     }
+    public CustomerResponseDTO getCustomerByCif(String cifNumber) {
+    Customer customer = customerRepository.findByCifNumber(cifNumber)
+            .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+    return mapToResponseDTO(customer);
+}
+
 }

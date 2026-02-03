@@ -21,27 +21,26 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    // 🔹 DEBIT / CREDIT TRANSACTION
+    // 🔹 DEBIT / CREDIT
     @PostMapping
-    public String doTransaction(
+    public TransactionResponseDTO performTransaction(
             @Valid @RequestBody TransactionRequestDTO requestDTO) {
 
-        transactionService.performTransaction(requestDTO);
-        return "Transaction Successful";
+        return transactionService.performTransaction(requestDTO);
     }
 
-    // 🔹 ALL TRANSACTIONS OF AN ACCOUNT
-    @GetMapping("/account/{accountId}")
+    // 🔹 ALL TRANSACTIONS
+    @GetMapping("/account/{accountNumber}")
     public List<TransactionResponseDTO> getAllTransactions(
-            @PathVariable Long accountId) {
+            @PathVariable String accountNumber) {
 
-        return transactionService.getAllTransactions(accountId);
+        return transactionService.getAllTransactions(accountNumber);
     }
 
     // 🔹 STATEMENT BETWEEN DATES
-    @GetMapping("/account/{accountId}/statement")
+    @GetMapping("/account/{accountNumber}/statement")
     public List<TransactionResponseDTO> getStatementBetweenDates(
-            @PathVariable Long accountId,
+            @PathVariable String accountNumber,
 
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -52,6 +51,6 @@ public class TransactionController {
             LocalDateTime toDate) {
 
         return transactionService.getStatementBetweenDates(
-                accountId, fromDate, toDate);
+                accountNumber, fromDate, toDate);
     }
 }

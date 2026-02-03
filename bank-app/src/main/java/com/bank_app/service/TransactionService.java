@@ -10,9 +10,9 @@ import com.bank_app.repository.AccountRepository;
 import com.bank_app.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -26,80 +26,62 @@ public class TransactionService {
         this.accountRepository = accountRepository;
     }
 
-    // ✅ DEBIT / CREDIT TRANSACTION
-    public void performTransaction(TransactionRequestDTO dto) {
+    public TransactionResponseDTO performTransaction(TransactionRequestDTO dto) {
 
-        Account account = accountRepository.findById(dto.getAccountId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Account not found with id: " + dto.getAccountId()));
+        Account account = accountRepository.findByAccountNumber(dto.getAccountNumber())
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-        // DEBIT
-        if (dto.getTransactionType().equalsIgnoreCase("DEBIT")) {
-
-            if (account.getBalance().compareTo(dto.getAmount()) < 0) {
-                throw new InsufficientBalanceException("Insufficient balance");
-            }
-
-            account.setBalance(account.getBalance().subtract(dto.getAmount()));
-        }
-        // CREDIT
-        else if (dto.getTransactionType().equalsIgnoreCase("CREDIT")) {
-
-            account.setBalance(account.getBalance().add(dto.getAmount()));
-        }
-        else {
-            throw new RuntimeException("Invalid transaction type");
+        if ("DEBIT".equalsIgnoreCase(dto.getTransactionType())
+                && account.getBalance().compareTo(dto.getAmount()) < 0) {
+            throw new InsufficientBalanceException("Insufficient balance");
         }
 
-        // Save transaction
+        BigDecimal updatedBalance =
+                "DEBIT".equalsIgnoreCase(dto.getTransactionType())
+                        ? account.getBalance().subtract(dto.getAmount())
+                        : account.getBalance().add(dto.getAmount());
+
+        account.setBalance(updatedBalance);
+
         Transaction transaction = new Transaction();
+        transaction.setAccount(account);
         transaction.setTransactionType(dto.getTransactionType());
         transaction.setAmount(dto.getAmount());
-        transaction.setBalanceAfterTransaction(account.getBalance());
+        transaction.setBalanceAfterTransaction(updatedBalance);
         transaction.setTransactionDate(LocalDateTime.now());
-        transaction.setAccount(account);
 
-        accountRepository.save(account);
         transactionRepository.save(transaction);
+        accountRepository.save(account);
+
+        return mapToDTO(transaction);
     }
 
-    // ✅ ALL TRANSACTIONS OF ACCOUNT
-    public List<TransactionResponseDTO> getAllTransactions(Long accountId) {
+    public List<TransactionResponseDTO> getAllTransactions(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Account not found with id: " + accountId));
-
-        return transactionRepository.findByAccountAccountId(account.getAccountId())
+        return transactionRepository.findByAccount(account)
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // ✅ STATEMENT BETWEEN DATES
     public List<TransactionResponseDTO> getStatementBetweenDates(
-            Long accountId,
+            String accountNumber,
             LocalDateTime from,
             LocalDateTime to) {
 
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Account not found with id: " + accountId));
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         return transactionRepository
-                .findByAccountAccountIdAndTransactionDateBetween(
-                        account.getAccountId(), from, to)
+                .findByAccountAndTransactionDateBetween(account, from, to)
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // 🔁 ENTITY → DTO
     private TransactionResponseDTO mapToDTO(Transaction t) {
-
         TransactionResponseDTO dto = new TransactionResponseDTO();
         dto.setTransactionId(t.getTransactionId());
         dto.setTransactionType(t.getTransactionType());

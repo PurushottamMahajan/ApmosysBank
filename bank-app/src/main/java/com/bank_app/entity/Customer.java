@@ -39,4 +39,6 @@ public class Customer {
 
     @Column(length = 12, unique = true)
     private String aadharNumber;
+    @Column(unique = true, nullable = false)
+    private String cifNumber;
 }
