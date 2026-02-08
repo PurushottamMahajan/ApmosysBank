@@ -37,6 +37,7 @@ export class CreateCustomerComponent {
   }
 
   submit() {
+    console.log('FORM VALUE:', this.customerForm.value);
     this.successMessage = '';
     this.errorMessage = '';
 
