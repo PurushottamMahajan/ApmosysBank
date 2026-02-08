@@ -1,0 +1,7 @@
+<div class="overlay" *ngIf="error$ | async as error">
+  <div class="popup">
+    <h4>⚠ Error</h4>
+    <p>{{ error }}</p>
+    <button class="btn btn-danger" (click)="close()">Close</button>
+  </div>
+</div>

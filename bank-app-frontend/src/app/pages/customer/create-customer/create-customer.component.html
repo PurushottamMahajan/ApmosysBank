@@ -1,22 +1,66 @@
-<div class="card">
-  <h2>Create Customer</h2>
+<div class="container mt-4">
+  <h3 class="mb-3">Customer Registration</h3>
 
-  <div class="form-grid">
-    <input placeholder="First Name" [(ngModel)]="customer.firstName">
-    <input placeholder="Last Name" [(ngModel)]="customer.lastName">
-    <input type="date" [(ngModel)]="customer.dob">
+  <form [formGroup]="customerForm" (ngSubmit)="submit()" class="card p-4">
 
-    <select [(ngModel)]="customer.gender">
-      <option value="">Select Gender</option>
-      <option>Male</option>
-      <option>Female</option>
-      <option>Other</option>
-    </select>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="First Name" formControlName="firstName">
+      </div>
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="Last Name" formControlName="lastName">
+      </div>
+    </div>
 
-    <input placeholder="Email" [(ngModel)]="customer.email">
-    <input placeholder="Mobile Number" [(ngModel)]="customer.mobileNumber">
-    <input placeholder="Aadhar Number" [(ngModel)]="customer.aadharNumber">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="Email" formControlName="email">
+      </div>
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="Mobile Number" formControlName="mobileNumber">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <input type="date" class="form-control" formControlName="dob">
+      </div>
+      <div class="col-md-6 mb-3">
+        <select class="form-control" formControlName="gender">
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="Marital Status" formControlName="maritalStatus">
+      </div>
+      <div class="col-md-6 mb-3">
+        <input class="form-control" placeholder="Nationality" formControlName="nationality">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <input class="form-control" placeholder="Aadhar Number" formControlName="aadharNumber">
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">
+      Create Customer
+    </button>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }} <br>
+    <strong>CIF Number:</strong> {{ cifNumber }}
   </div>
 
-  <button (click)="createCustomer()">Create Customer</button>
+  <!-- ERROR -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
 </div>

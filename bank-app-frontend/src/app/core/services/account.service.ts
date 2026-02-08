@@ -1,20 +1,21 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Account } from '../models/account.model';
-import { API_BASE_URL } from './api.config';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
 
-  private url = `${API_BASE_URL}/accounts`;
+  private baseUrl = 'http://localhost:8080/api/accounts';
 
   constructor(private http: HttpClient) {}
 
-  createAccount(account: Account) {
-    return this.http.post<Account>(this.url, account);
+  createAccount(data: any): Observable<any> {
+    return this.http.post(this.baseUrl, data);
   }
+  getBalance(accountNumber: string) {
+  return this.http.get<any>(
+    `${this.baseUrl}/${accountNumber}/balance`
+  );
+}
 
-  getAccountsByCustomer(customerId: number) {
-    return this.http.get<Account[]>(`${this.url}/customer/${customerId}`);
-  }
 }

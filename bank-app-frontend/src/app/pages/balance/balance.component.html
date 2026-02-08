@@ -1,0 +1,31 @@
+<div class="container mt-4">
+  <h3 class="mb-4 text-center">Balance Enquiry</h3>
+
+  <div class="card shadow-sm p-4">
+
+    <form [formGroup]="balanceForm" (ngSubmit)="checkBalance()">
+
+      <div class="mb-3">
+        <label class="form-label">Account Number</label>
+        <input type="text"
+               class="form-control"
+               formControlName="accountNumber"
+               placeholder="Enter Account Number">
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit">
+        Check Balance
+      </button>
+
+    </form>
+
+    <div *ngIf="balance !== null" class="alert alert-success mt-3 text-center">
+      <strong>Available Balance:</strong> ₹ {{ balance }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3 text-center">
+      {{ errorMessage }}
+    </div>
+
+  </div>
+</div>

@@ -1,27 +1,18 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Customer } from '../models/customer.model';
-import { API_BASE_URL } from './api.config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
 
-  private url = `${API_BASE_URL}/customers`;
+  private baseUrl = 'http://localhost:8081/api/customers';
 
   constructor(private http: HttpClient) {}
 
-  createCustomer(customer: Customer) {
-    return this.http.post<Customer>(this.url, customer);
-  }
-
-  getAllCustomers() {
-    return this.http.get<Customer[]>(this.url);
-  }
-
-  getCustomerById(id: number) {
-    return this.http.get<Customer>(`${this.url}/${id}`);
+  createCustomer(customer: Customer): Observable<any> {
+    return this.http.post(this.baseUrl, customer);
   }
 }
-    

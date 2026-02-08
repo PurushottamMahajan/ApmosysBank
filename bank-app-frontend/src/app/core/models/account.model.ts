@@ -1,7 +1,4 @@
 export interface Account {
-  accountId?: number;
-  accountNumber?: string;
-  accountType: string;
-  balance: number;
-  customerId: number;
+  cifNumber: string;
+  accountType: 'SAVINGS' | 'CURRENT';
 }

@@ -1,35 +1,57 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CustomerService } from '../../../core/services/customer.service';
-import { Customer } from '../../../core/models/customer.model';
 
 @Component({
-  selector: 'app-create-customer',
   standalone: true,
-  imports: [FormsModule],
+  selector: 'app-create-customer',
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './create-customer.component.html',
   styleUrls: ['./create-customer.component.css']
 })
 export class CreateCustomerComponent {
 
-  customer: Customer = {
-    firstName: '',
-    lastName: '',
-    dob: '',
-    gender: '',
-    maritalStatus: '',
-    nationality: '',
-    email: '',
-    mobileNumber: '',
-    aadharNumber: ''
-  };
+  customerForm!: FormGroup;
 
-  constructor(private customerService: CustomerService) {}
+  successMessage = '';
+  errorMessage = '';
+  cifNumber = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private customerService: CustomerService
+  ) {
+    // ✅ SAFE INITIALIZATION
+    this.customerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      mobileNumber: ['', Validators.required],
+      dob: ['', Validators.required],
+      gender: ['', Validators.required],
+      maritalStatus: ['', Validators.required],
+      nationality: ['', Validators.required],
+      aadharNumber: ['', Validators.required]
+    });
+  }
 
   submit() {
-    this.customerService.createCustomer(this.customer).subscribe({
-      next: () => alert('Customer created successfully'),
-      error: () => alert('Error creating customer')
-    });
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    if (this.customerForm.invalid) return;
+
+    this.customerService.createCustomer(this.customerForm.value)
+      .subscribe({
+        next: (res) => {
+          this.cifNumber = res.cifNumber;
+          this.successMessage = 'Customer Created Successfully';
+          this.customerForm.reset();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Server Error';
+        }
+      });
   }
 }

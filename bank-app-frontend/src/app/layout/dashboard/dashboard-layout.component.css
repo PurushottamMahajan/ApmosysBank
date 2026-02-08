@@ -1,0 +1,5 @@
+.content {
+  width: 100%;
+  background: #f1f3f5;
+  min-height: calc(100vh - 56px);
+}
