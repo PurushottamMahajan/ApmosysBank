@@ -1,11 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
-  <span class="navbar-brand fw-bold">
-    🏦 Bank Management System
-  </span>
+<nav class="navbar navbar-dark bg-dark px-3">
+  <a class="navbar-brand">Bank App</a>
 
-  <div class="ms-auto">
-    <a class="nav-link d-inline text-white" routerLink="/customer">Customer</a>
-    <a class="nav-link d-inline text-white" routerLink="/account">Account</a>
-    <a class="nav-link d-inline text-white" routerLink="/transaction">Transaction</a>
+  <div *ngIf="auth.isAuthenticated()">
+    <a routerLink="/dashboard" class="me-3 text-white">Dashboard</a>
+    <a routerLink="/transactions" class="me-3 text-white">Statements</a>
+    <button class="btn btn-sm btn-danger" (click)="logout()">Logout</button>
   </div>
 </nav>

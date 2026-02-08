@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TransactionService } from '../../core/services/transaction.service';
 
 @Component({
@@ -12,14 +12,16 @@ import { TransactionService } from '../../core/services/transaction.service';
 })
 export class TransactionComponent {
 
-  transactionForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
+
+  transactionForm;
 
   constructor(
     private fb: FormBuilder,
     private transactionService: TransactionService
   ) {
+    // ✅ Initialize form INSIDE constructor
     this.transactionForm = this.fb.group({
       accountNumber: ['', Validators.required],
       transactionType: ['CREDIT', Validators.required],
@@ -40,7 +42,7 @@ export class TransactionComponent {
           this.transactionForm.reset({ transactionType: 'CREDIT' });
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Transaction Failed';
+          this.errorMessage = err.error?.message || 'Transaction failed';
         }
       });
   }

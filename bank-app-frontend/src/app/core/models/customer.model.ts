@@ -3,9 +3,9 @@ export interface Customer {
   lastName: string;
   email: string;
   mobileNumber: string;
-  gender: string;
   dob: string;
-  aadharNumber: string;
-  nationality: string;
+  gender: string;
   maritalStatus: string;
+  nationality: string;
+  aadharNumber: string;
 }
