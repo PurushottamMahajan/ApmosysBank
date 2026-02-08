@@ -1,7 +1,7 @@
-<div *ngIf="errorService.errorMessage" class="error-backdrop">
+<div *ngIf="errorService.error$ | async as error" class="error-backdrop">
   <div class="error-box">
     <h5>Error</h5>
-    <p>{{ errorService.errorMessage }}</p>
+    <p>{{ error }}</p>
     <button class="btn btn-danger" (click)="errorService.clear()">Close</button>
   </div>
 </div>
