@@ -4,12 +4,16 @@
   <form [formGroup]="accountForm" (ngSubmit)="submit()" class="mt-3">
 
     <div class="mb-3">
-      <label>CIF Number</label>
-      <input type="text" class="form-control" formControlName="cifNumber">
+      <label class="form-label">CIF Number</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="cifNumber"
+        placeholder="Enter CIF Number">
     </div>
 
     <div class="mb-3">
-      <label>Account Type</label>
+      <label class="form-label">Account Type</label>
       <select class="form-control" formControlName="accountType">
         <option value="SAVINGS">Savings</option>
         <option value="CURRENT">Current</option>

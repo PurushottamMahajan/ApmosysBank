@@ -1,39 +1,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Transaction } from '../models/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
 
-
-  private baseUrl = 'http://localhost:8080/api/transactions';
+  // ✅ Backend runs on 8081
+  private baseUrl = 'http://localhost:8081/api/transactions';
 
   constructor(private http: HttpClient) {}
 
-  getAll(accountNumber: string): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>(
-      `${this.baseUrl}/account/${accountNumber}`
-    );
-  }
+  // 🔹 DEBIT / CREDIT
   performTransaction(data: any): Observable<any> {
     return this.http.post(this.baseUrl, data);
   }
 
-  getAllTransactions(accountNumber: string): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>(
+  // 🔹 ALL TRANSACTIONS
+  getAllTransactions(accountNumber: string): Observable<any[]> {
+    return this.http.get<any[]>(
       `${this.baseUrl}/account/${accountNumber}`
     );
   }
 
+  // 🔹 STATEMENT BETWEEN DATES
   getStatement(
     accountNumber: string,
-    from: string,
-    to: string
-  ): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>(
+    fromDate: string,
+    toDate: string
+  ): Observable<any[]> {
+    return this.http.get<any[]>(
       `${this.baseUrl}/account/${accountNumber}/statement`,
-      { params: { fromDate: from, toDate: to } }
+      {
+        params: {
+          fromDate,
+          toDate
+        }
+      }
     );
   }
 }
+  

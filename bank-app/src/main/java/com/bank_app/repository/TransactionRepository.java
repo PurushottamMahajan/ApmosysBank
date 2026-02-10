@@ -18,4 +18,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             LocalDateTime from,
             LocalDateTime to
     );
+    List<Transaction> findTop5ByAccountOrderByTransactionDateDesc(Account account);
+
 }

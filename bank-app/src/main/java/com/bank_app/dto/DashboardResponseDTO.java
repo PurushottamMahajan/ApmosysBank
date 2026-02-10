@@ -1,13 +1,14 @@
 package com.bank_app.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class AccountResponseDTO {
+public class DashboardResponseDTO {
 
     private String accountNumber;
     private String accountType;
     private BigDecimal balance;
-    private String cifNumber;
+    private List<TransactionResponseDTO> recentTransactions;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -33,11 +34,11 @@ public class AccountResponseDTO {
         this.balance = balance;
     }
 
-    public String getCifNumber() {
-        return cifNumber;
+    public List<TransactionResponseDTO> getRecentTransactions() {
+        return recentTransactions;
     }
 
-    public void setCifNumber(String cifNumber) {
-        this.cifNumber = cifNumber;
+    public void setRecentTransactions(List<TransactionResponseDTO> recentTransactions) {
+        this.recentTransactions = recentTransactions;
     }
 }

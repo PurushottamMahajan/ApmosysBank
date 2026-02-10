@@ -1,12 +1,10 @@
 package com.bank_app.controller;
 
 import com.bank_app.dto.AccountCreationRequestDTO;
+import com.bank_app.dto.AccountResponseDTO;
 import com.bank_app.dto.BalanceEnquiryResponseDTO;
-import com.bank_app.entity.Account;
 import com.bank_app.service.AccountService;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -19,9 +17,9 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    // 🔹 CREATE ACCOUNT USING CIF
+    // 🔹 CREATE ACCOUNT USING CIF (DTO → DTO)
     @PostMapping
-    public Account createAccount(
+    public AccountResponseDTO createAccount(
             @RequestBody AccountCreationRequestDTO requestDTO) {
 
         return accountService.createAccount(requestDTO);
@@ -32,12 +30,6 @@ public class AccountController {
     public BalanceEnquiryResponseDTO getBalance(
             @PathVariable String accountNumber) {
 
-        BigDecimal balance = accountService.getBalance(accountNumber);
-
-        BalanceEnquiryResponseDTO response = new BalanceEnquiryResponseDTO();
-        response.setAccountNumber(accountNumber);
-        response.setBalance(balance);
-
-        return response;
+        return accountService.getBalance(accountNumber);
     }
 }

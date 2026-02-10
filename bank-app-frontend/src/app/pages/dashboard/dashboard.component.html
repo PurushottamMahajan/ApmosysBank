@@ -1,41 +1,98 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Banking Dashboard</h2>
 
+  <h3 class="mb-4 text-center">Banking Dashboard</h3>
+
+  <!-- ACCOUNT INPUT -->
+  <div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Enter Account Number"
+        [(ngModel)]="accountNumber"
+        (keyup.enter)="fetchDashboardData()">
+    </div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
   <div class="row g-4">
-    <div class="col-md-3">
-      <div class="card shadow-sm text-center">
-        <div class="card-body">
-          <h5>Customers</h5>
-          <a routerLink="/customer" class="btn btn-primary w-100">Create</a>
-        </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center p-3">
+        <h6>Current Balance</h6>
+        <h4 class="text-success">
+          {{ balance !== null ? '₹ ' + balance : '--' }}
+        </h4>
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm text-center">
-        <div class="card-body">
-          <h5>Accounts</h5>
-          <a routerLink="/account" class="btn btn-success w-100">Create</a>
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center p-3">
+        <h6>Last Transaction</h6>
+        <div *ngIf="lastTransaction; else noTxn">
+          <strong>{{ lastTransaction.transactionType }}</strong><br>
+          ₹ {{ lastTransaction.amount }}
         </div>
+        <ng-template #noTxn>--</ng-template>
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm text-center">
-        <div class="card-body">
-          <h5>Transactions</h5>
-          <a routerLink="/transaction" class="btn btn-warning w-100">Debit / Credit</a>
-        </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center p-3">
+        <h6>Account</h6>
+        <strong>{{ accountNumber || '--' }}</strong>
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm text-center">
-        <div class="card-body">
-          <h5>Statements</h5>
-          <a routerLink="/transactions" class="btn btn-dark w-100">View</a>
-        </div>
+  </div>
+
+  <!-- GRAPH (canvas ALWAYS present) -->
+  <div class="row mt-5">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow-sm p-4">
+        <h5 class="text-center mb-3">Credit vs Debit Summary</h5>
+        <canvas #txnChart></canvas>
       </div>
     </div>
   </div>
+
+  <!-- NO DATA MESSAGE -->
+  <div *ngIf="!showChart && accountNumber"
+       class="text-center text-muted mt-3">
+    No transaction data available for this account
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="row mt-5 g-3">
+
+    <div class="col-md-3">
+      <button class="btn btn-outline-primary w-100"
+              (click)="navigate('/customer')">
+        Create Customer
+      </button>
+    </div>
+
+    <div class="col-md-3">
+      <button class="btn btn-outline-secondary w-100"
+              (click)="navigate('/account')">
+        Create Account
+      </button>
+    </div>
+
+    <div class="col-md-3">
+      <button class="btn btn-outline-success w-100"
+              (click)="navigate('/transaction')">
+        Deposit / Withdraw
+      </button>
+    </div>
+
+    <div class="col-md-3">
+      <button class="btn btn-outline-dark w-100"
+              (click)="navigate('/transactions')">
+        Statement
+      </button>
+    </div>
+
+  </div>
+
 </div>

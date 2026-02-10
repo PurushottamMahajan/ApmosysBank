@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account.service';
 
 @Component({
@@ -12,36 +12,42 @@ import { AccountService } from '../../core/services/account.service';
 })
 export class BalanceComponent {
 
+  balanceForm: FormGroup;
   balance: number | null = null;
   errorMessage = '';
 
-  balanceForm;
-
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private cdr: ChangeDetectorRef   // ✅ IMPORTANT
   ) {
-    // ✅ FIX: initialize form inside constructor
     this.balanceForm = this.fb.group({
       accountNumber: ['', Validators.required]
     });
   }
 
-  checkBalance() {
+  checkBalance(): void {
     this.balance = null;
     this.errorMessage = '';
 
     if (this.balanceForm.invalid) return;
 
-    const accountNumber = this.balanceForm.value.accountNumber;
+    const { accountNumber } = this.balanceForm.value;
 
-    this.accountService.getBalance(accountNumber!)
+    this.accountService.getBalance(accountNumber)
       .subscribe({
         next: (res) => {
           this.balance = res.balance;
+
+          // 🔥 FORCE UI UPDATE
+          this.cdr.detectChanges();
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Unable to fetch balance';
+          this.errorMessage =
+            err.error?.message || 'Unable to fetch balance';
+
+          // 🔥 FORCE UI UPDATE
+          this.cdr.detectChanges();
         }
       });
   }

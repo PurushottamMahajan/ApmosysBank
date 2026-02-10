@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { AccountService } from '../../../core/services/account.service';
@@ -10,9 +10,10 @@ import { AccountService } from '../../../core/services/account.service';
   templateUrl: './create-account.component.html',
   styleUrls: ['./create-account.component.css']
 })
-export class CreateAccountComponent {
+export class CreateAccountComponent implements OnInit {
 
   accountForm!: FormGroup;
+
   successMessage = '';
   errorMessage = '';
   accountNumber = '';
@@ -20,18 +21,23 @@ export class CreateAccountComponent {
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService
-  ) {
+  ) {}
+
+  // ✅ initialize form AFTER constructor
+  ngOnInit(): void {
     this.accountForm = this.fb.group({
       cifNumber: ['', Validators.required],
       accountType: ['SAVINGS', Validators.required]
     });
   }
 
-  submit() {
+  submit(): void {
     this.successMessage = '';
     this.errorMessage = '';
 
-    if (this.accountForm.invalid) return;
+    if (this.accountForm.invalid) {
+      return;
+    }
 
     this.accountService.createAccount(this.accountForm.value)
       .subscribe({
